@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .move_button {
+            text-decoration: none;
+            background-color: orange;
+            margin: 5px;
+            padding: 6px;
+            border-radius: 5px;
+            color: black;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .add-student {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .add-student input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            border-color: olive;
+            border-radius: 3px;
+        }
+
+        .add-student input:focus {
+            border-color: darkolivegreen;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 128, 0, 0.5);
+        }
+
+
+        .add-student button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: olive;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .student-list {
+            margin-top: 20px;
+        }
+
+        .student {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .button {
+            padding: 5px 10px;
+            background-color: pink;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .button.added {
+            background-color: blueviolet;
+        }
+
+        .button:hover {
+            background-color: hotpink;
+        }
+
+        .remove-button {
+            padding: 5px 10px;
+            background-color: slateblue;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .remove-button:hover {
+            background-color: darkslateblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>All Students</h1>
+        <div class="add-student">
+            <input type="text" id="newStudentName" placeholder="Enter student name">
+            <button onclick="addStudent()">Add Student</button>
+        </div>
+        <div class="student-list" id="studentList">
+            <div class="student">
+                <span>Vijay</span>
+                <div>
+                    <button class="button" onclick="addToFavorites(this, 'Vijay')">Add to Favorites</button>
+                    <button class="remove-button" onclick="removeStudent(this, 'Vijay')">Remove</button>
+                </div>
+            </div>
+            <div class="student">
+                <span>SivaKarthikeyan</span>
+                <div>
+                    <button class="button" onclick="addToFavorites(this, 'SivaKarthikeyan')">Add to Favorites</button>
+                    <button class="remove-button" onclick="removeStudent(this, 'SivaKarthikeyan')">Remove</button>
+                </div>
+            </div>
+            <div class="student">
+                <span>Arun Kumar</span>
+                <div>
+                    <button class="button" onclick="addToFavorites(this, 'Arun Kumar')">Add to Favorites</button>
+                    <button class="remove-button" onclick="removeStudent(this, 'Arun Kumar')">Remove</button>
+                </div>
+            </div>
+            <div class="student">
+                <span>Muthu</span>
+                <div>
+                    <button class="button" onclick="addToFavorites(this, 'Muthu')">Add to Favorites</button>
+                    <button class="remove-button" onclick="removeStudent(this, 'Muthu')">Remove</button>
+                </div>
+            </div>
+            <div class="student">
+                <span>Vishal</span>
+                <div>
+                    <button class="button" onclick="addToFavorites(this, 'Vishal')">Add to Favorites</button>
+                    <button class="remove-button" onclick="removeStudent(this, 'Vishal')">Remove</button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <a href="favourite_list.html" class="move_button">Go to Favorite Students</a>
+        <br>
+    </div>
+    <script>
+        let favoriteStudents = JSON.parse(localStorage.getItem('favoriteStudents')) || [];
+
+        function addToFavorites(button, name) {
+            if (!favoriteStudents.includes(name)) {
+                favoriteStudents.push(name);
+                localStorage.setItem('favoriteStudents', JSON.stringify(favoriteStudents));
+                button.classList.add('added');
+                button.innerText = 'Added to Favorites';
+            }
+        }
+
+        function addStudent() {
+            const input = document.getElementById('newStudentName');
+            const name = input.value.trim();
+
+            if (name === '') {
+                alert('Please enter a valid name.');
+                return;
+            }
+
+            const studentList = document.getElementById('studentList');
+            const studentDiv = document.createElement('div');
+            studentDiv.classList.add('student');
+            studentDiv.innerHTML = `<span>${name}</span>
+                <div>
+                    <button class="button" onclick="addToFavorites(this, '${name}')">Add to Favorites</button>
+                    <button class="remove-button" onclick="removeStudent(this, '${name}')">Remove</button>
+                </div>`;
+            studentList.appendChild(studentDiv);
+
+            input.value = '';
+        }
+
+        function removeStudent(button, name) {
+            const studentDiv = button.closest('.student');
+            studentDiv.remove();
+
+            const index = favoriteStudents.indexOf(name);
+            if (index !== -1) {
+                favoriteStudents.splice(index, 1);
+                localStorage.setItem('favoriteStudents', JSON.stringify(favoriteStudents));
+            }
+        }
+
+        function updateButtons() {
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(button => {
+                const name = button.closest('.student').querySelector('span').innerText;
+                if (favoriteStudents.includes(name)) {
+                    button.classList.add('added');
+                    button.innerText = 'Added to Favorites';
+                } else {
+                    button.classList.remove('added');
+                    button.innerText = 'Add to Favorites';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', updateButtons);
+    </script>
+</body>
+
+</html>

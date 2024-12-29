@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Students</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .move_button {
+            text-decoration: none;
+            background-color: orange;
+            margin: 5px;
+            padding: 6px;
+            border-radius: 5px;
+            color: black;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .button {
+            padding: 5px 10px;
+            background-color: violet;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: violet;
+        }
+
+        .student-list {
+            margin-top: 20px;
+        }
+
+        .student {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Favorite Students</h1>
+        <div class="student-list" id="favoriteList"></div>
+        <br>
+        <a href="index.html" class="move_button">Go to Students List</a>
+    </div>
+    <script>
+        let favoriteStudents = JSON.parse(localStorage.getItem('favoriteStudents')) || [];
+
+        function displayFavorites() {
+            const favoriteList = document.getElementById('favoriteList');
+            favoriteList.innerHTML = '';
+            if (favoriteStudents.length === 0) {
+                favoriteList.innerHTML = '<p>No favorite students yet.</p>';
+            } else {
+                favoriteStudents.forEach(student => {
+                    const studentDiv = document.createElement('div');
+                    studentDiv.classList.add('student');
+                    studentDiv.innerHTML = `<span>${student}</span><button class="button" onclick="removeFromFavorites('${student}')">Remove</button>`;
+                    favoriteList.appendChild(studentDiv);
+                });
+            }
+        }
+
+        function removeFromFavorites(name) {
+            favoriteStudents = favoriteStudents.filter(student => student !== name);
+            localStorage.setItem('favoriteStudents', JSON.stringify(favoriteStudents));
+            displayFavorites();
+        }
+
+        displayFavorites();
+    </script>
+</body>
+
+</html>
